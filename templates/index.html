@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Face Value</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='FaceValue.css') }}">
+</head>
+<body>
+  <div class="wrap">
+    <header class="mast">
+      <div>
+        <h1>Face Value</h1>
+        <p>Photograph a bill. We read the denomination and serial number, check for collectible patterns, and estimate its value.</p>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="panel">
+        <h2>Scan a bill</h2>
+        <p class="sub">Upload the full front of the bill. Rotate it until the portrait and text are upright, then send it to Python.</p>
+
+        <label class="drop" id="drop">
+          <input type="file" id="file" accept="image/*" capture="environment">
+          <strong>Take or upload a photo</strong>
+          <span>Keep all four bill edges visible and use good lighting.</span>
+        </label>
+        <div class="sample-section">
+            <div class="lab">Or try a sample bill</div>
+
+            <div class="sample-images">
+
+                <button
+                    type="button"
+                    class="sample-image"
+                    data-image="{{ url_for('static', filename='samples/100Cents.jpg') }}"
+                >
+      
+                    <span>Random Dollar</span>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="sample-image"
+                    data-image="{{ url_for('static', filename='samples/Star-Sample.jpg') }}"
+                >
+      
+                    <span>Star Example</span>
+                </button>
+
+            </div>
+        </div>
+
+        <div id="previewArea" class="preview-area hidden">
+          <canvas id="preview"></canvas>
+
+          <div class="rotate-row">
+            <button class="btn" id="left" type="button">Rotate left</button>
+            <button class="btn" id="right" type="button">Rotate right</button>
+          </div>
+        </div>
+
+        <label for="cond">Condition</label>
+        <select id="cond">
+          <option value="1">Circulated</option>
+          <option value="1.6">Crisp uncirculated</option>
+          <option value="2.5">Gem uncirculated</option>
+        </select>
+
+        <button class="go" id="analyze" type="button" disabled>Analyze photo</button>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+
+        <hr>
+
+        <h3>Correct the scan</h3>
+        <p class="sub">OCR can make mistakes. Fix either field and recalculate without uploading the image again.</p>
+
+        <label for="serial">Serial number</label>
+        <input type="text" id="serial" class="serial-input" maxlength="14" placeholder="L12345678A">
+
+        <label for="denom">Denomination</label>
+        <select id="denom">
+          <option value="1">$1</option>
+          <option value="2">$2</option>
+          <option value="5">$5</option>
+          <option value="10">$10</option>
+          <option value="20">$20</option>
+          <option value="50">$50</option>
+          <option value="100">$100</option>
+        </select>
+
+        <button class="btn solid wide" id="recalculate" type="button">Recalculate</button>
+      </section>
+
+      <section class="panel result-panel">
+        <h2>What it’s worth</h2>
+        <p class="sub">The estimate is based on serial rarity, denomination, and condition.</p>
+
+        <div id="result">
+          <div class="empty">
+            <b>No bill checked yet</b>
+            Upload a photo on the left to begin.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="panel how">
+      <h2>How it works</h2>
+      <div class="steps">
+        <div><b>1. Find the bill</b><span>OpenCV finds the bill edges and flattens the photo.</span></div>
+        <div><b>2. Read it</b><span>EasyOCR reads the denomination and serial from fixed normalized regions.</span></div>
+        <div><b>3. Check rarity</b><span>Python detects rare appearances such as star notes and fancy serial patterns, then estimates a range.</span></div>
+      </div>
+    </section>
+
+    <footer>
+      Prototype valuation only. Prices are illustrative and not live market quotes. A valuable bill should be authenticated before purchase or sale.
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='FaceValue.js') }}"></script>
+</body>
+</html>
